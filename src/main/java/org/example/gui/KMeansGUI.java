@@ -16,11 +16,12 @@ public class KMeansGUI extends JFrame {
     private JTextField kTextField;
     private JButton recalculateButton;
     private JTextArea outputTextArea;
+    private PointsPanel pointsPanel;
 
     public KMeansGUI() {
         setTitle("K-Means Clustering");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 400);
+        setSize(800, 600);
         setLayout(new BorderLayout());
 
         JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -34,10 +35,15 @@ public class KMeansGUI extends JFrame {
 
         outputTextArea = new JTextArea();
         JScrollPane scrollPane = new JScrollPane(outputTextArea);
-        outputTextArea.setEditable(false); // Запретить редактирование
+        outputTextArea.setEditable(false);
+
+        pointsPanel = new PointsPanel();
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scrollPane, pointsPanel);
+        splitPane.setResizeWeight(0.5);
 
         add(inputPanel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
+        add(splitPane, BorderLayout.CENTER);
 
         recalculateButton.addActionListener(new ActionListener() {
             @Override
@@ -55,16 +61,15 @@ public class KMeansGUI extends JFrame {
                 return;
             }
 
-            // Генерация случайных точек
-            int numberOfPoints = 1000; // Или можно сделать ввод количества точек через GUI
-            List<Point> points = RandomDataGenerator.generateRandomPoints(numberOfPoints, 0, 100); // Диапазон координат 0-100
+            int numberOfPoints = 1000;
+            List<Point> points = RandomDataGenerator.generateRandomPoints(numberOfPoints, 0, 100);
 
-            // Запуск алгоритма K-средних
             KMeansAlgorithm kmeans = new KMeansAlgorithm();
             List<Cluster> clusters = kmeans.runKMeans(points, k);
 
-            // Вывод результатов в текстовое поле
             displayResults(points, clusters);
+
+            pointsPanel.setPointsAndClusters(points, k);
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Введите корректное число кластеров.", "Ошибка ввода", JOptionPane.ERROR_MESSAGE);
@@ -72,7 +77,7 @@ public class KMeansGUI extends JFrame {
     }
 
     private void displayResults(List<Point> points, List<Cluster> clusters) {
-        outputTextArea.setText(""); // Очищаем предыдущий вывод
+        outputTextArea.setText("");
         StringBuilder sb = new StringBuilder();
         sb.append("Результаты K-Means Clustering:\n");
         for (Point point : points) {

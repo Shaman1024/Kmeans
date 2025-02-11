@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
 public class KMeansAlgorithm {
@@ -16,19 +17,24 @@ public class KMeansAlgorithm {
             return null;
         }
 
+        boolean changed = true;
         List<Cluster> clusters = initializeCluster(points, k);
 
-        for (Cluster cluster : clusters) {
-            cluster.clearPoints();
+        while (changed) {
+
+            for (Cluster cluster : clusters) {
+                cluster.clearPoints();
+            }
+
+            for (Point point : points) {
+                Cluster closestCluster = findClosestCluster(point, clusters);
+                point.setClusterNumber(clusters.indexOf(closestCluster));
+                closestCluster.addPoint(point);
+            }
+
+            changed = updateCentroids(clusters);
+
         }
-
-        for (Point point : points) {
-            Cluster closestCluster = findClosestCluster(point, clusters);
-            point.setClusterNumber(clusters.indexOf(closestCluster));
-            closestCluster.addPoint(point);
-        }
-
-
 
         return clusters;
     }
@@ -55,8 +61,11 @@ public class KMeansAlgorithm {
     private Cluster findClosestCluster(Point point, List<Cluster> clusters) {
         Cluster closestCluster = null;
         double minDistance = Double.MAX_VALUE;
+
         for (Cluster cluster : clusters) {
-            if (calculateDistance(point, cluster.getCentroid()) < minDistance) {
+            double distance = calculateDistance(point, cluster.getCentroid());
+            if (distance < minDistance) {
+                minDistance = distance;
                 closestCluster = cluster;
             }
         }
@@ -64,8 +73,40 @@ public class KMeansAlgorithm {
     }
 
     private double calculateDistance(Point p1, Point p2) {
-        return sqrt(p2.getX() * p1.getX() + p2.getY() * p2.getY());
+        double dx = p1.getX() - p2.getX();
+        double dy = p1.getY() - p2.getY();
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
+    private boolean updateCentroids(List<Cluster> clusters) {
+        boolean changed = false;
+        double tolerance = 1e-6;
+
+        for (Cluster cluster : clusters) {
+            if (!cluster.getPoints().isEmpty()) {
+                Point oldCentroid = cluster.getCentroid();
+                Point newCentroid = calculateNewCentroid(cluster.getPoints());
+
+                double distanceChange = calculateDistance(oldCentroid, newCentroid);
+
+                cluster.setCentroid(newCentroid);
+
+                if (distanceChange > tolerance) {
+                    changed = true;
+                }
+            }
+        }
+        return changed;
+    }
+
+    private Point calculateNewCentroid(List<Point> points){
+        double sumX = 0;
+        double sumY = 0;
+        for (Point point : points) {
+            sumX += point.getX();
+            sumY += point.getY();
+        }
+        return new Point(sumX / points.size(), sumY / points.size() , -1);
+    }
 
 }
