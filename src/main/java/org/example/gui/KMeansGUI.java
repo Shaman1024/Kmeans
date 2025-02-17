@@ -61,15 +61,19 @@ public class KMeansGUI extends JFrame {
                 return;
             }
 
+            // Генерация случайных точек
             int numberOfPoints = 1000;
             List<Point> points = RandomDataGenerator.generateRandomPoints(numberOfPoints, 0, 100);
 
+            // Запуск алгоритма K-средних
             KMeansAlgorithm kmeans = new KMeansAlgorithm();
             List<Cluster> clusters = kmeans.runKMeans(points, k);
 
+            // Вывод результатов в текстовое поле
             displayResults(points, clusters);
 
-            pointsPanel.setPointsAndClusters(points, k);
+            // Передаем точки, кластеры и количество кластеров в PointsPanel для отрисовки
+            pointsPanel.setPointsAndClusters(points, clusters, k); // Передаем clusters
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Введите корректное число кластеров.", "Ошибка ввода", JOptionPane.ERROR_MESSAGE);
