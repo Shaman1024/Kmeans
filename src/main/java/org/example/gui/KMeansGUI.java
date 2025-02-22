@@ -15,23 +15,29 @@ public class KMeansGUI extends JFrame {
 
     private JTextField kTextField;
     private JButton recalculateButton;
+    private JButton maximinButton;
     private JTextArea outputTextArea;
     private PointsPanel pointsPanel;
+
+    private List<Point> generatedPoints; // Переменная для хранения сгенерированных точек
+    private List<Cluster> clusters;
 
     public KMeansGUI() {
         setTitle("K-Means Clustering");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1200, 800);
         setLayout(new BorderLayout());
 
         JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel kLabel = new JLabel("Количество кластеров (K):");
         kTextField = new JTextField(5);
-        recalculateButton = new JButton("Пересчитать");
+        recalculateButton = new JButton("К- Средних");
+        maximinButton = new JButton("Максимин");
 
         inputPanel.add(kLabel);
         inputPanel.add(kTextField);
         inputPanel.add(recalculateButton);
+        inputPanel.add(maximinButton);
 
         outputTextArea = new JTextArea();
         JScrollPane scrollPane = new JScrollPane(outputTextArea);
@@ -45,13 +51,45 @@ public class KMeansGUI extends JFrame {
         add(inputPanel, BorderLayout.NORTH);
         add(splitPane, BorderLayout.CENTER);
 
+
         recalculateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 runKMeansClustering();
             }
         });
+
+        maximinButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                runMaxiMin();
+            }
+        });
     }
+
+    private void runMaxiMin() {
+        try {
+            int k = Integer.parseInt(kTextField.getText());
+            if (k <= 0) {
+                JOptionPane.showMessageDialog(this, "Количество кластеров должно быть положительным числом.", "Ошибка ввода", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int numberOfPoints = 10000;
+            generatedPoints = RandomDataGenerator.generateRandomPoints(numberOfPoints, 0, 100);
+
+            KMeansAlgorithm kmeans = new KMeansAlgorithm();
+            clusters = kmeans.runMaxiMin(generatedPoints, k ,generatedPoints.getFirst());
+
+            displayResults(generatedPoints, clusters);
+
+            pointsPanel.setPointsAndClusters(generatedPoints, clusters, k);
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Введите корректное число кластеров.", "Ошибка ввода", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 
     private void runKMeansClustering() {
         try {
@@ -61,19 +99,17 @@ public class KMeansGUI extends JFrame {
                 return;
             }
 
-            // Генерация случайных точек
-            int numberOfPoints = 1000;
-            List<Point> points = RandomDataGenerator.generateRandomPoints(numberOfPoints, 0, 100);
+            if (generatedPoints == null) {
+                JOptionPane.showMessageDialog(this, "Сначала запустите алгоритм Maximin или сгенерируйте точки.", "Нет данных", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-            // Запуск алгоритма K-средних
             KMeansAlgorithm kmeans = new KMeansAlgorithm();
-            List<Cluster> clusters = kmeans.runKMeans(points, k);
+            clusters = kmeans.runKMeans(generatedPoints, k, clusters);
 
-            // Вывод результатов в текстовое поле
-            displayResults(points, clusters);
+            displayResults(generatedPoints, clusters);
 
-            // Передаем точки, кластеры и количество кластеров в PointsPanel для отрисовки
-            pointsPanel.setPointsAndClusters(points, clusters, k); // Передаем clusters
+            pointsPanel.setPointsAndClusters(generatedPoints, clusters, k);
 
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Введите корректное число кластеров.", "Ошибка ввода", JOptionPane.ERROR_MESSAGE);

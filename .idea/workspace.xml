@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f484d83d-903c-4697-ad8d-96cda325d859" name="Changes" comment="done">
+    <list default="true" id="f484d83d-903c-4697-ad8d-96cda325d859" name="Changes" comment="change gui">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/algorithm/KMeansAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/algorithm/KMeansAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/gui/KMeansGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/gui/KMeansGUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +54,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/vanya/IdeaProjects/Kmeans&quot;,
     &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/vanya/IdeaProjects/Kmeans/src/main/java/org/example/Main.java&quot;
   }
 }</component>
@@ -88,13 +91,22 @@
       <option name="project" value="LOCAL" />
       <updated>1739301771148</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="change gui">
+      <option name="closed" value="true" />
+      <created>1739825518184</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1739825518184</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Start" />
     <MESSAGE value="main part" />
     <MESSAGE value="done" />
-    <option name="LAST_COMMIT_MESSAGE" value="done" />
+    <MESSAGE value="change gui" />
+    <option name="LAST_COMMIT_MESSAGE" value="change gui" />
   </component>
 </project>
